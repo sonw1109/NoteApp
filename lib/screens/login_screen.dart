@@ -71,6 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       return null;
                     },
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.mail),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Email',
@@ -99,6 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     },
                     obscureText: true,
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.key),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Password',
@@ -138,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       final user = await authService.signInWithEmailAndPassword(
-                          _emailController.text, _passwordController.text);
+                          context, _emailController.text, _passwordController.text);
                       if (user != null) {
                         Navigator.push(
                             context, MaterialPageRoute(builder: (context) => HomePage()));

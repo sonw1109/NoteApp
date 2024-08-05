@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -7,10 +8,12 @@ class FirebaseAuthService {
 
 // Sign up Email
   Future<User?> signUpWithEmailAndPassword(
-      String email, String password, String confirmPassword) async {
+      BuildContext context, String email, String password, String confirmPassword) async {
     if (password != confirmPassword) {
-      print("Passwords do not match");
-      return null;
+      _showErrorDialog(context, "Password do not match");
+    }
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showErrorDialog(context, "Please enter your account");
     }
     try {
       UserCredential credential =
@@ -23,7 +26,11 @@ class FirebaseAuthService {
   }
 
 // Sign in Email
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      BuildContext context, String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
+      _showErrorDialog(context, "Please enter your account");
+    }
     try {
       UserCredential credential =
           await _auth.signInWithEmailAndPassword(email: email, password: password);
@@ -58,6 +65,26 @@ class FirebaseAuthService {
     } catch (e) {
       print("Some error occured: $e");
     }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

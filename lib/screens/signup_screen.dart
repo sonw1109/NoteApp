@@ -74,6 +74,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       return null;
                     },
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.mail),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Email',
@@ -102,6 +103,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                     obscureText: true,
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.key),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Password',
@@ -130,6 +132,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                     obscureText: true,
                     decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.key),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Confirm Password',
@@ -151,6 +154,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       final user = await authService.signUpWithEmailAndPassword(
+                          context,
                           _emailController.text,
                           _passwordController.text,
                           _confirmPasswordController.text);
