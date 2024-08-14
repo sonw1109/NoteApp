@@ -25,8 +25,7 @@ class UpgradeScreen extends ConsumerWidget {
 
     void onSavePressed() {
       if (formKey.currentState!.validate()) {
-        List<String> additionalContents =
-            textList.map((controller) => controller.text).toList();
+        List<String> additionalContents = textList.map((controller) => controller.text).toList();
         final pathFromState = ref.read(imageProvider);
         final linkFromState = ref.read(noteProvider);
 
@@ -83,8 +82,7 @@ class UpgradeScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 24),
                   child: TextFormField(
-                    style: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.w500),
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                     controller: titleController,
                     decoration: const InputDecoration(
                       hintText: 'Title',
@@ -108,9 +106,7 @@ class UpgradeScreen extends ConsumerWidget {
                 note.link != null
                     ? InkWell(
                         onTap: () {
-                          ref
-                              .read(noteProvider.notifier)
-                              .openAppBrowserView(note.link!);
+                          ref.read(noteProvider.notifier).openAppBrowserView(note.link!);
                         },
 // Delete Link
                         onLongPress: () {
@@ -128,9 +124,8 @@ class UpgradeScreen extends ConsumerWidget {
                                       ),
                                       title: const Text('Delete Link'),
                                       onTap: () {
-                                        ref
-                                            .read(noteProvider.notifier)
-                                            .resetNote();
+                                        ref.read(noteProvider.notifier).resetNote();
+                                        note.link = null;
                                         Navigator.pop(context);
                                       },
                                     ),
@@ -178,9 +173,8 @@ class UpgradeScreen extends ConsumerWidget {
                                       ),
                                       title: const Text('Delete Image'),
                                       onTap: () {
-                                        ref
-                                            .read(imageProvider.notifier)
-                                            .resetImage();
+                                        ref.read(imageProvider.notifier).resetImage();
+                                        note.image = null;
                                         Navigator.pop(context);
                                       },
                                     ),

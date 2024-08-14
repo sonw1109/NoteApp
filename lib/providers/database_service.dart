@@ -39,7 +39,7 @@ class DatabaseService {
         $_notesAdditionalContentsColumnName TEXT,
         $_notesTimeColumnName TEXT NOT NULL,
         $_notesLinkColumnName TEXT,
-        $_notesImageColumnName TEXT
+        $_notesImageColumnName TEXT,
         )
         ''');
       },

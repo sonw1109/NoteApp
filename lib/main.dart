@@ -9,19 +9,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:note_app/screens/login_screen.dart';
 import 'package:note_app/screens/signup_screen.dart';
 import 'package:note_app/screens/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Khởi tạo Firebase
+
+  final prefs = await SharedPreferences.getInstance();
+  final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   runApp(
-    const ProviderScope(
-      child: Theme(),
+    ProviderScope(
+      child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
 
-class Theme extends ConsumerWidget {
-  const Theme({super.key});
+class MyApp extends ConsumerWidget {
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +39,7 @@ class Theme extends ConsumerWidget {
           return const ContentScreen();
         },
       },
-      home: const WelcomeScreen(),
+      home: isLoggedIn ? const HomePage() : const WelcomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

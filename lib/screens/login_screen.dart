@@ -64,12 +64,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   padding: const EdgeInsets.only(bottom: 30),
                   child: TextFormField(
                     controller: _emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter some text!";
-                      }
-                      return null;
-                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.mail),
                       filled: true, // Đặt thành true để hiển thị màu nền
@@ -212,7 +206,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       final user = await authService.signInWithGoogle();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                      if (user != null) {
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => HomePage()));
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),

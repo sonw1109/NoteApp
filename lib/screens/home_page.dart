@@ -9,11 +9,14 @@ import 'package:intl/intl.dart';
 import 'package:note_app/models/note.dart';
 import 'package:note_app/providers/database_service.dart';
 
+import 'package:note_app/providers/image_provider.dart';
 import 'package:note_app/providers/savenote_provider.dart';
+
 import 'package:note_app/screens/upgrade_screen.dart';
+import 'package:note_app/widgets/information.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -43,14 +46,22 @@ class _HomePageState extends ConsumerState<HomePage> {
     final DatabaseService databaseService = DatabaseService.instance;
     final notes = ref.watch(saveProvider);
 
+    // final notes = ref.watch(saveProvider)..sort((a, b) => a.idNote.compareTo(b.idNote));
+
+    final avatarGallery = ref.watch(avatarGalleryProvider);
+    final avatarPhoto = ref.watch(avatarPhotoProvider);
+
+    // Logic để quyết định cái nào hiển thị
+    final displayImage = avatarGallery ?? avatarPhoto;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
-        title: const Padding(
-          padding: EdgeInsets.fromLTRB(21, 0, 0, 0),
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(21, 0, 0, 0),
           child: Row(
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -66,19 +77,29 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ],
               ),
-              Spacer(),
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage("assets/images/avt.png"),
-                  ),
-                ],
+              const Spacer(),
+              Builder(
+                builder: (context) => Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Scaffold.of(context).openDrawer(); // Mở Drawer khi nhấn vào avatar
+                      },
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: displayImage != null
+                            ? FileImage(displayImage)
+                            : const AssetImage('assets/images/avt.png') as ImageProvider,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
+      drawer: const Information(),
       body: FutureBuilder(
         future: _future,
         builder: (ctx, snapshot) {
@@ -93,8 +114,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               padding: const EdgeInsets.fromLTRB(21, 24, 21, 0),
               child: MasonryGridView.builder(
                 itemCount: notes.length + 1,
-                gridDelegate:
-                    const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
                 mainAxisSpacing: 20,
@@ -117,28 +137,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              final result =
-                                  await Navigator.pushNamed(context, '/1');
-                              if (result != null &&
-                                  result is Map<String, dynamic>) {
-                                final DateFormat dateFormat =
-                                    DateFormat('dd/MM/yyyy');
-                                final String formattedDate =
-                                    dateFormat.format(DateTime.now());
+                              final result = await Navigator.pushNamed(context, '/1');
+                              if (result != null && result is Map<String, dynamic>) {
+                                final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+                                final String formattedDate = dateFormat.format(DateTime.now());
                                 final newNote = Note(
                                   title: result['title'],
                                   content: result['content'],
-                                  additionalContents:
-                                      result['additionalContents'],
+                                  additionalContents: result['additionalContents'],
                                   link: result['link'],
                                   image: result['image'],
                                   time: formattedDate,
                                 );
-                                ref
-                                    .read(saveProvider.notifier)
-                                    .saveNote(newNote);
-                                await databaseService
-                                    .insertNote(newNote.toMap());
+                                ref.read(saveProvider.notifier).saveNote(newNote);
+                                await databaseService.insertNote(newNote.toMap());
                               }
                             },
                             icon: const Icon(Icons.add_circle_outline),
@@ -176,8 +188,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               context: context,
                               builder: (context) => AlertDialog(
                                 title: const Text('Delete Note'),
-                                content: const Text(
-                                    'Are you sure you want to delete this note?'),
+                                content: const Text('Are you sure you want to delete this note?'),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
@@ -187,9 +198,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      ref
-                                          .read(saveProvider.notifier)
-                                          .deleteDataFromDB(note.idNote);
+                                      ref.read(saveProvider.notifier).deleteDataFromDB(note.idNote);
                                       Navigator.pop(context);
                                     },
                                     child: const Text('Delete'),
@@ -203,13 +212,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                             children: [
                               Text(
                                 note.title,
-                                style: const TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.w500),
+                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                               ),
                               Text(note.content),
                               if (note.additionalContents != null)
-                                ...note.additionalContents!
-                                    .map((item) => Text(item)),
+                                ...note.additionalContents!.map((item) => Text(item)),
                               if (note.link != null)
                                 Text(
                                   note.link.toString(),
@@ -219,8 +226,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               Container(
                                 height: 8,
                               ),
-                              if (note.image != null)
-                                Image.file(File(note.image!)),
+                              if (note.image != null) Image.file(File(note.image!)),
                               Container(
                                 height: 8,
                               ),

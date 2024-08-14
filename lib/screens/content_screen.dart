@@ -29,8 +29,7 @@ class _ContentScreenState extends ConsumerState<ContentScreen> {
 
   void onSavePressed() {
     if (_formKey.currentState!.validate()) {
-      List<String> additionalContents =
-          _textList.map((controller) => controller.text).toList();
+      List<String> additionalContents = _textList.map((controller) => controller.text).toList();
 
       Navigator.pop(context, {
         'title': _titleController.text,
@@ -85,8 +84,7 @@ class _ContentScreenState extends ConsumerState<ContentScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 24),
                   child: TextFormField(
-                    style: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.w500),
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                     controller: _titleController,
                     decoration: const InputDecoration(
                       hintText: 'Title',
@@ -142,9 +140,7 @@ class _ContentScreenState extends ConsumerState<ContentScreen> {
                 getNote?.link != null
                     ? InkWell(
                         onTap: () {
-                          ref
-                              .read(noteProvider.notifier)
-                              .openAppBrowserView(getNote.link!);
+                          ref.read(noteProvider.notifier).openAppBrowserView(getNote.link!);
                         },
                         child: Text(
                           getNote!.link!,
@@ -178,9 +174,7 @@ class _ContentScreenState extends ConsumerState<ContentScreen> {
                                       ),
                                       title: const Text('Delete Image'),
                                       onTap: () {
-                                        ref
-                                            .read(imageProvider.notifier)
-                                            .resetImage();
+                                        ref.read(imageProvider.notifier).resetImage();
                                         Navigator.pop(context);
                                       },
                                     ),

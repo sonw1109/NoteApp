@@ -26,8 +26,7 @@ class NoteNotifier extends StateNotifier<Note?> {
             title: const Text('Link'),
             content: TextField(
               controller: linkController,
-              decoration:
-                  const InputDecoration(hintText: "Type your link here"),
+              decoration: const InputDecoration(hintText: "Type your link here"),
             ),
             actions: <Widget>[
               TextButton(
@@ -63,9 +62,10 @@ class NoteNotifier extends StateNotifier<Note?> {
   }
 
   void resetNote() {
-    state = null;
+    if (state != null) {
+      state = null;
+    }
   }
 }
 
-final noteProvider =
-    StateNotifierProvider<NoteNotifier, Note?>((ref) => NoteNotifier());
+final noteProvider = StateNotifierProvider<NoteNotifier, Note?>((ref) => NoteNotifier());
