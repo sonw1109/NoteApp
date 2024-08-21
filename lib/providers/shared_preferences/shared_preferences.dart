@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:note_app/providers/firebase_auth_implementatiton/firebase_auth_services.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService extends StateNotifier<bool> {

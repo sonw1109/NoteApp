@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:note_app/models/note.dart';
 
-import 'package:note_app/providers/image_provider.dart';
-import 'package:note_app/providers/link_provider.dart';
+import 'package:note_app/providers/notes/image_provider.dart';
+import 'package:note_app/providers/notes/link_provider.dart';
 
-import 'package:note_app/providers/savenote_provider.dart';
+import 'package:note_app/providers/notes/savenote_provider.dart';
 import 'package:note_app/widgets/add_icon.dart';
 
 import 'package:note_app/widgets/bottom_navigation.dart';

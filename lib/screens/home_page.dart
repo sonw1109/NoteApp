@@ -7,10 +7,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 
 import 'package:note_app/models/note.dart';
-import 'package:note_app/providers/database_service.dart';
+import 'package:note_app/providers/database/database_service.dart';
 
-import 'package:note_app/providers/image_provider.dart';
-import 'package:note_app/providers/savenote_provider.dart';
+import 'package:note_app/providers/firebase_auth_implementatiton/firebase_data_profile.dart';
+import 'package:note_app/providers/notes/savenote_provider.dart';
 
 import 'package:note_app/screens/upgrade_screen.dart';
 import 'package:note_app/widgets/information.dart';
@@ -45,20 +45,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final DatabaseService databaseService = DatabaseService.instance;
     final notes = ref.watch(saveProvider);
-
-    // final notes = ref.watch(saveProvider)..sort((a, b) => a.idNote.compareTo(b.idNote));
-
-    final avatarGallery = ref.watch(avatarGalleryProvider);
-    final avatarPhoto = ref.watch(avatarPhotoProvider);
-
-    // Logic để quyết định cái nào hiển thị
-    final displayImage = avatarGallery ?? avatarPhoto;
-
+    final displayImage = ref.watch(avatarProvider);
+    final avatarNotifier = ref.read(avatarProvider.notifier);
+    avatarNotifier.loadImageFromFirebase();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
         title: Padding(
-          padding: const EdgeInsets.fromLTRB(21, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Row(
             children: [
               const Column(
@@ -81,7 +75,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               Builder(
                 builder: (context) => Row(
                   children: [
-                    InkWell(
+                    GestureDetector(
                       onTap: () {
                         Scaffold.of(context).openDrawer(); // Mở Drawer khi nhấn vào avatar
                       },
@@ -89,7 +83,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                         radius: 30,
                         backgroundImage: displayImage != null
                             ? FileImage(displayImage)
-                            : const AssetImage('assets/images/avt.png') as ImageProvider,
+                            : (avatarNotifier.imageUrl != null
+                                ? NetworkImage(avatarNotifier.imageUrl!)
+                                : const AssetImage('assets/images/avt.png')) as ImageProvider,
                       ),
                     ),
                   ],

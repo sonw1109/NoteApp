@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:note_app/providers/image_provider.dart';
-import 'package:note_app/providers/link_provider.dart';
+import 'package:note_app/providers/notes/image_provider.dart';
+import 'package:note_app/providers/notes/link_provider.dart';
 
 class AddIcon extends ConsumerWidget {
   // final Function(TextEditingController) onAddNewLine;
@@ -35,9 +35,7 @@ class AddIcon extends ConsumerWidget {
           children: [
             IconButton(
               onPressed: () {
-                ref
-                    .read(noteProvider.notifier)
-                    .showTextInputDialog(BuildContext);
+                ref.read(noteProvider.notifier).showTextInputDialog(BuildContext);
               },
               icon: Image.asset('assets/images/add_icon.png'),
             ),

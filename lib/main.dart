@@ -1,13 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:note_app/providers/theme_provider.dart';
 
+import 'package:note_app/providers/notes/theme_provider.dart';
 import 'package:note_app/screens/content_screen.dart';
-import 'package:note_app/screens/home_page.dart';
 
+import 'package:note_app/screens/home_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:note_app/screens/login_screen.dart';
-import 'package:note_app/screens/signup_screen.dart';
+
 import 'package:note_app/screens/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

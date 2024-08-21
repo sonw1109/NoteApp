@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:note_app/providers/image_provider.dart';
+
+import 'package:note_app/providers/firebase_auth_implementatiton/firebase_data_profile.dart';
 import 'package:note_app/providers/shared_preferences/shared_preferences.dart';
+
+import 'package:note_app/screens/chat_screen.dart';
 import 'package:note_app/screens/login_screen.dart';
-import 'package:note_app/widgets/change_avatar.dart';
+
+import 'package:note_app/screens/profile_screen.dart';
 
 class Information extends ConsumerWidget {
   const Information({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final avatarGallery = ref.watch(avatarGalleryProvider);
-    final avatarPhoto = ref.watch(avatarPhotoProvider);
+    final avatarNotifier = ref.read(avatarProvider.notifier);
+    avatarNotifier.loadImageFromFirebase();
 
-    // Logic để quyết định cái nào hiển thị
-    final displayImage = avatarGallery ?? avatarPhoto;
+    final displayImage = ref.watch(avatarProvider);
 
     return Drawer(
       child: ListView(
@@ -25,30 +28,13 @@ class Information extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: displayImage != null
-                            ? FileImage(displayImage)
-                            : const AssetImage('assets/images/avt.png') as ImageProvider,
-                      ),
-                      Positioned(
-                        bottom: -10,
-                        left: 40,
-                        child: IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return const BottomSheetContent();
-                              },
-                            );
-                          },
-                          icon: const Icon(Icons.add_a_photo),
-                        ),
-                      ),
-                    ],
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: displayImage != null
+                        ? FileImage(displayImage)
+                        : (avatarNotifier.imageUrl != null
+                            ? NetworkImage(avatarNotifier.imageUrl!)
+                            : const AssetImage('assets/images/avt.png')) as ImageProvider,
                   ),
                   const SizedBox(width: 10),
                 ],
@@ -56,14 +42,19 @@ class Information extends ConsumerWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.message),
-            title: const Text('Messages'),
-            onTap: () {},
-          ),
-          ListTile(
             leading: const Icon(Icons.account_circle),
             title: const Text('Profile'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.message),
+            title: const Text('Messages'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatScreen()));
+            },
           ),
           ListTile(
             leading: const Icon(Icons.settings),
@@ -75,7 +66,7 @@ class Information extends ConsumerWidget {
             title: const Text('Log out'),
             onTap: () async {
               await ref.read(sharePreferencesProvider.notifier).signOut();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
           ),
         ],

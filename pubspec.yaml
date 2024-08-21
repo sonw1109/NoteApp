@@ -49,6 +49,9 @@ dependencies:
   shared_preferences: ^2.3.1
   cloud_firestore: ^4.14.0
   firebase_storage: ^11.6.0
+  dash_chat_2: ^0.0.21
+  chat_gpt_sdk: ^3.1.0
+
 
 
   

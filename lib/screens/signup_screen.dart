@@ -1,9 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:note_app/providers/firebase_auth_implementatiton/firebase_auth_services.dart';
 import 'package:note_app/screens/home_page.dart';
+
 import 'package:note_app/screens/login_screen.dart';
 import 'package:note_app/screens/welcome_screen.dart';
 
@@ -74,7 +74,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       return null;
                     },
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.mail),
+                      prefixIcon: const Icon(Icons.mail),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Email',
@@ -103,7 +103,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                     obscureText: true,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.key),
+                      prefixIcon: const Icon(Icons.key),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Password',
@@ -132,7 +132,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                     obscureText: true,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.key),
+                      prefixIcon: const Icon(Icons.key),
                       filled: true, // Đặt thành true để hiển thị màu nền
                       fillColor: const Color(0xffF1F4FF), // Màu nền của ô nhập liệu
                       labelText: 'Confirm Password',
@@ -160,7 +160,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           _confirmPasswordController.text);
                       if (user != null) {
                         Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -185,7 +185,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
                     },
                     child: const Text(
                       "Already have an account",
@@ -228,8 +228,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   padding: const EdgeInsets.only(bottom: 20),
                   child: ElevatedButton(
                     onPressed: () async {
-                      final user = await authService.signInWithGoogle();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                      await authService.signInWithGoogle();
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => const HomePage()));
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),

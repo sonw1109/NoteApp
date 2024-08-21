@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/providers/theme_provider.dart';
+import 'package:note_app/providers/notes/theme_provider.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,7 +24,7 @@ class BottomNavigation extends ConsumerWidget {
               icon: Image.asset('assets/images/darkmode_icon.png'),
             ),
             IconButton(
-              onPressed: onSave, 
+              onPressed: onSave,
               icon: Image.asset('assets/images/storage_icon.png'),
             ),
           ],
