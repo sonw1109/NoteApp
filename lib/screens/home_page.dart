@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,7 +48,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     final notes = ref.watch(saveProvider);
     final displayImage = ref.watch(avatarProvider);
     final avatarNotifier = ref.read(avatarProvider.notifier);
-    avatarNotifier.loadImageFromFirebase();
+    // avatarNotifier.loadImageFromFirebase();
+    // Lấy userId từ Firebase Authentication
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (userId != null) {
+      // Tải thông tin người dùng từ Firestore
+      avatarNotifier.loadImageFromFirebase(userId);
+    }
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,

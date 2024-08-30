@@ -8,7 +8,7 @@ class FirebaseAuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
 // Sign up Email
-  Future<User?> signUpWithEmailAndPassword(
+  Future<String?> signUpWithEmailAndPassword(
       BuildContext context, String email, String password, String confirmPassword) async {
     if (password != confirmPassword) {
       _showErrorDialog(context, "Password do not match");
@@ -19,7 +19,7 @@ class FirebaseAuthService {
     try {
       UserCredential credential =
           await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      return credential.user;
+      return credential.user?.uid;
     } catch (e) {
       print("Some error occured: $e");
     }
@@ -27,7 +27,7 @@ class FirebaseAuthService {
   }
 
 // Sign in Email
-  Future<User?> signInWithEmailAndPassword(
+  Future<String?> signInWithEmailAndPassword(
       BuildContext context, String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
       _showErrorDialog(context, "Please enter your account");
@@ -37,7 +37,7 @@ class FirebaseAuthService {
           await _auth.signInWithEmailAndPassword(email: email, password: password);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      return credential.user;
+      return credential.user?.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         _showErrorDialog(context, 'email invalid');
@@ -50,7 +50,7 @@ class FirebaseAuthService {
   }
 
 // Sign in with Google
-  Future<User?> signInWithGoogle() async {
+  Future<String?> signInWithGoogle() async {
     try {
       // GoogleSignIn
       final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -75,7 +75,7 @@ class FirebaseAuthService {
           await FirebaseAuth.instance.signInWithCredential(credentialUser);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      return userCredential.user;
+      return userCredential.user?.uid;
       // return FirebaseAuth.instance.currentUser;
     } catch (e) {
       print("Some error occured: $e");
@@ -87,14 +87,14 @@ class FirebaseAuthService {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Ok'),
+              child: const Text('Ok'),
             ),
           ],
         );

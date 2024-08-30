@@ -1,12 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:note_app/providers/firebase_auth_implementatiton/firebase_data_profile.dart';
 import 'package:note_app/providers/shared_preferences/shared_preferences.dart';
 
-import 'package:note_app/screens/chat_screen.dart';
 import 'package:note_app/screens/login_screen.dart';
-
 import 'package:note_app/screens/profile_screen.dart';
 
 class Information extends ConsumerWidget {
@@ -15,7 +14,15 @@ class Information extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final avatarNotifier = ref.read(avatarProvider.notifier);
-    avatarNotifier.loadImageFromFirebase();
+    // avatarNotifier.loadImageFromFirebase();
+    // Lấy userId từ Firebase Authentication
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (userId != null) {
+      // Tải thông tin người dùng từ Firestore
+      avatarNotifier.loadImageFromFirebase(userId);
+    }
 
     final displayImage = ref.watch(avatarProvider);
 
@@ -53,7 +60,7 @@ class Information extends ConsumerWidget {
             leading: const Icon(Icons.message),
             title: const Text('Messages'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatScreen()));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatScreen()));
             },
           ),
           ListTile(

@@ -23,7 +23,7 @@ class SharedPreferencesService extends StateNotifier<bool> {
   Future<void> signInWithEmailAndPassword(
       BuildContext context, String email, String password) async {
     final firebaseAuthService = ref.read(firebaseAuthServiceProvider);
-    User? user = await firebaseAuthService.signInWithEmailAndPassword(context, email, password);
+    String? user = await firebaseAuthService.signInWithEmailAndPassword(context, email, password);
     if (user != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
@@ -33,7 +33,7 @@ class SharedPreferencesService extends StateNotifier<bool> {
 
   Future<void> signInWithGoogle() async {
     final firebaseAuthService = ref.read(firebaseAuthServiceProvider);
-    User? user = await firebaseAuthService.signInWithGoogle();
+    String? user = await firebaseAuthService.signInWithGoogle();
     if (user != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);

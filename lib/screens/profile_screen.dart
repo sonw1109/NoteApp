@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,12 +13,24 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final avatarNotifier = ref.read(avatarProvider.notifier);
-    avatarNotifier.loadImageFromFirebase();
+    // Lấy userId từ Firebase Authentication
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (userId != null) {
+      // Tải thông tin người dùng từ Firestore
+      avatarNotifier.loadImageFromFirebase(userId);
+    }
 
     final displayImage = ref.watch(avatarProvider);
-    final nameController = TextEditingController();
-    final surnameController = TextEditingController();
-    final ageController = TextEditingController();
+
+    final firstName = avatarNotifier.firstName ?? "";
+    final lastName = avatarNotifier.lastName ?? "";
+    final age = avatarNotifier.age ?? "";
+
+    final firstNameController = TextEditingController(text: firstName);
+    final lastNameController = TextEditingController(text: lastName);
+    final ageController = TextEditingController(text: age);
 
     // Gradient sử dụng cho AppBar và body
     const gradient = LinearGradient(
@@ -91,7 +104,7 @@ class ProfileScreen extends ConsumerWidget {
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: nameController,
+                            controller: firstNameController,
                             decoration: const InputDecoration(
                               hintText: "First Name",
                               hintStyle: TextStyle(color: Colors.white),
@@ -103,7 +116,7 @@ class ProfileScreen extends ConsumerWidget {
                             thickness: BorderSide.strokeAlignCenter,
                           ),
                           TextFormField(
-                            controller: surnameController,
+                            controller: lastNameController,
                             decoration: const InputDecoration(
                               hintText: "Last Name",
                               hintStyle: TextStyle(color: Colors.white),
@@ -130,7 +143,23 @@ class ProfileScreen extends ConsumerWidget {
                             alignment: Alignment.bottomRight,
                             child: TextButton(
                               onPressed: () async {
-                                await avatarNotifier.uploadToFirebase();
+                                // Lấy thông tin người dùng từ các TextFormField
+                                // String firstName = firstNameController.text;
+                                // String lastName = lastNameController.text;
+                                // String age = ageController.text;
+
+                                if (userId != null) {
+                                  await avatarNotifier.uploadToFirebase(
+                                    userId,
+                                    firstNameController.text,
+                                    lastNameController.text,
+                                    ageController.text,
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const HomePage()),
+                                  );
+                                }
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) => const HomePage()));
                               },
